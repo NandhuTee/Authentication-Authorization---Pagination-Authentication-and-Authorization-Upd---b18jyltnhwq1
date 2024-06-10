@@ -9,32 +9,41 @@ app.use(bodyParser.json());
 
 // Mock user data (replace with a database in a real application)
 const users = [
-  // Define user objects here
+  { id: 1, username: 'user1', password: 'password1' },
+  { id: 2, username: 'user2', password: 'password2' },
 ];
 
-// Authentication endpoint (students should implement this)
+// Authentication endpoint
 app.post('/login', (req, res) => {
-  // Implement user authentication logic here
+  const { username, password } = req.body;
+  // Find user by username and password
+  const user = users.find(u => u.username === username && u.password === password);
+
   if (!user) {
     return res.status(401).json({ message: 'Authentication failed' });
   }
 
   // If authentication is successful, generate a JWT token and send it in the response
-  // Example token generation:
-  // const token = jwt.sign({ userId: user.id, username: user.username }, secretKey);
-  // res.status(201).json({ token });
+  const token = jwt.sign({ userId: user.id, username: user.username }, secretKey);
+  res.status(201).json({ token });
 });
 
-// Protected route (students should implement this)
+// Protected route
 app.get('/profile', (req, res) => {
+  const token = req.headers.authorization;
+
   if (!token) {
     return res.status(401).json({ message: 'Authorization required' });
   }
-  // Middleware to check for a valid JWT token
-  // Implement JWT token verification logic here
-  // If the token is valid, students can access the user's data from 'decoded'
-  // Example response:
-  // res.status(201).json({ message: 'Profile data', user: decoded });
+
+  // Verify JWT token
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    // If the token is valid, send the user's profile data
+    res.status(200).json({ message: 'Profile data', user: decoded });
+  });
 });
 
 module.exports = app;
