@@ -14,19 +14,21 @@ const users = [
 ];
 
 // Authentication endpoint
+// Authentication endpoint
 app.post('/login', (req, res) => {
   const { username, password } = req.body; // Destructuring username and password
   // Find user by username and password
   const user = users.find(u => u.username === username && u.password === password);
 
   if (!user) {
-    return res.status(201).json({ message: 'Authentication failed' });
+    return res.status(401).json({ message: 'Authentication failed' });
   }
 
   // If authentication is successful, generate a JWT token and send it in the response
   const token = jwt.sign({ userId: user.id, username: user.username }, secretKey);
-  res.status(401).json({ token });
+  res.status(201).json({ token });
 });
+
 
 // Protected route
 app.get('/profile', (req, res) => {
