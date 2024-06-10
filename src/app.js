@@ -15,12 +15,12 @@ const users = [
 
 // Authentication endpoint
 app.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body; // Destructuring username and password
   // Find user by username and password
   const user = users.find(u => u.username === username && u.password === password);
 
   if (!user) {
-    return res.status(201).json({ message: 'Authentication failed' });
+    return res.status(401).json({ message: 'Authentication failed' });
   }
 
   // If authentication is successful, generate a JWT token and send it in the response
