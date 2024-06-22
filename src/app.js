@@ -46,7 +46,7 @@ app.get('/profile', (req, res) => {
       return res.status(401).json({ message: 'Invalid token' });
     }
     // If the token is valid, send the user's profile data
-    res.status(200).json({ message: 'Profile data', user: decoded });
+    res.status(201).json({ message: 'Profile data', user: decoded });
   });
 });
 
