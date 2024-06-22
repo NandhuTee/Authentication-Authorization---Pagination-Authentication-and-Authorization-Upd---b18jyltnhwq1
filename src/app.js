@@ -32,12 +32,14 @@ app.post('/login', (req, res) => {
 
 // Protected route
 app.get('/profile', (req, res) => {
-  const token = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
+  if (!authHeader) {
     return res.status(401).json({ message: 'Authorization required' });
   }
 
+  const token = authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
+  
   // Verify JWT token
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
